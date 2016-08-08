@@ -747,11 +747,11 @@ void lp_config_set_skip_flag_for_section(LpConfig *lpconfig, const char *section
 void lp_item_write(LpItem *item, LpConfig *lpconfig){
 	int ret =-1 ;
 	if (item->is_comment){	
-		ret =bctbx_file_fprintf(lpconfig->pFile, 0, "%s\n",item->value);
+		ret =bctbx_file_fprintf(lpconfig->pFile, 0, "%s\r\n",item->value);
 
 	}
 	else if (item->value && item->value[0] != '\0' ){
-		ret =bctbx_file_fprintf(lpconfig->pFile, 0, "%s=%s\n",item->key,item->value);
+		ret =bctbx_file_fprintf(lpconfig->pFile, 0, "%s=%s\r\n",item->key,item->value);
 	}
 	
 	else {
@@ -776,10 +776,10 @@ void lp_section_write(LpSection *sec,LpConfig *lpconfig){
 	if (bctbx_file_fprintf(lpconfig->pFile, 0, "[%s",sec->name) < 0) ms_error("lp_section_write : write error on %s", sec->name);
 	bctbx_list_for_each2(sec->params, (void (*)(void*, void*))lp_section_param_write, (void *)lpconfig);
 
-	if (bctbx_file_fprintf(lpconfig->pFile, 0, "]\n")< 0) ms_error("lp_section_write : write error ");
+	if (bctbx_file_fprintf(lpconfig->pFile, 0, "]\r\n")< 0) ms_error("lp_section_write : write error ");
 	bctbx_list_for_each2(sec->items, (void (*)(void*, void*))lp_item_write, (void *)lpconfig);
 
-	if (bctbx_file_fprintf(lpconfig->pFile, 0, "\n")< 0) ms_error("lp_section_write : write error");
+	if (bctbx_file_fprintf(lpconfig->pFile, 0, "\r\n")< 0) ms_error("lp_section_write : write error");
 	
 }
 
@@ -1061,13 +1061,13 @@ struct _entry_data {
 static void dump_entry(const char *entry, void *data) {
 	struct _entry_data *d = (struct _entry_data *) data;
 	const char *value = lp_config_get_string(d->conf, d->section, entry, "");
-	*d->buffer = ms_strcat_printf(*d->buffer, "\t%s=%s\n", entry, value);
+	*d->buffer = ms_strcat_printf(*d->buffer, "\t%s=%s\r\n", entry, value);
 }
 
 static void dump_section(const char *section, void *data) {
 	struct _entry_data *d = (struct _entry_data *) data;
 	d->section = section;
-	*d->buffer = ms_strcat_printf(*d->buffer, "[%s]\n", section);
+	*d->buffer = ms_strcat_printf(*d->buffer, "[%s]\r\n", section);
 	lp_config_for_each_entry(d->conf, section, dump_entry, d);
 }
 
