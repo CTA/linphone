@@ -2267,6 +2267,7 @@ core_start:
 	g_signal_connect(G_OBJECT (the_ui), "key_press_event", G_CALLBACK (linphone_gtk_on_key_press), NULL);
 
 	linphone_gtk_create_log_window();
+  linphone_gtk_show_keypad();
 	linphone_core_enable_logs_with_cb(linphone_gtk_log_handler);
 	/*it is possible to filter in or out some logs by configuring per log domain:*/
 	/*ortp_set_log_level_mask("belle-sip", ORTP_ERROR);*/
