@@ -278,7 +278,7 @@ LinphoneAddress * linphone_friend_get_address(const LinphoneFriend *lf) {
 	return NULL;
 }
 
-int linphone_friend_set_address(LinphoneFriend *lf, const LinphoneAddress *addr) {
+int linphone_friend_set_address(LinphoneFriend *lf, const LinphoneAddress *addr){
 	LinphoneAddress *fr = linphone_address_clone(addr);
 
 	linphone_address_clean(fr);
@@ -715,7 +715,7 @@ void linphone_friend_apply(LinphoneFriend *fr, LinphoneCore *lc) {
 	LinphoneAddress *addr = linphone_friend_get_address(fr);
 
 	if (!addr) {
-		ms_debug("No sip url defined in friend %s", linphone_friend_get_name(fr));
+		ms_warning("No sip url defined.");
 		return;
 	}
 	linphone_address_unref(addr);
@@ -1170,7 +1170,7 @@ static void linphone_create_table(sqlite3* db) {
 	ret = sqlite3_exec(db,"CREATE TABLE IF NOT EXISTS friends ("
 						"id                INTEGER PRIMARY KEY AUTOINCREMENT,"
 						"friend_list_id    INTEGER,"
-						"sip_uri           TEXT NOT NULL,"
+						"sip_uri           TEXT,"
 						"subscribe_policy  INTEGER,"
 						"send_subscribe    INTEGER,"
 						"ref_key           TEXT,"
@@ -1199,35 +1199,27 @@ static void linphone_create_table(sqlite3* db) {
 	}
 }
 
-static bool_t linphone_update_table(sqlite3* db) {
-	static sqlite3_stmt *stmt_version;
-	int database_user_version = -1;
+static void linphone_update_table(sqlite3* db) {
 	char *errmsg = NULL;
-
-    if (sqlite3_prepare_v2(db, "PRAGMA user_version;", -1, &stmt_version, NULL) == SQLITE_OK) {
-        while(sqlite3_step(stmt_version) == SQLITE_ROW) {
-            database_user_version = sqlite3_column_int(stmt_version, 0);
-			ms_debug("friends database user version = %i", database_user_version);
-		}
+	int ret = sqlite3_exec(db,
+		"PRAGMA writable_schema = 1;\n"
+		"UPDATE SQLITE_MASTER SET SQL = 'CREATE TABLE friends ("
+			"id                INTEGER PRIMARY KEY AUTOINCREMENT,"
+			"friend_list_id    INTEGER,"
+			"sip_uri           TEXT,"
+			"subscribe_policy  INTEGER,"
+			"send_subscribe    INTEGER,"
+			"ref_key           TEXT,"
+			"vCard             TEXT,"
+			"vCard_etag        TEXT,"
+			"vCard_url         TEXT,"
+			"presence_received INTEGER"
+		")' WHERE NAME = 'friends';\n"
+		"PRAGMA writable_schema = 0;", 0, 0, &errmsg);
+	if (ret != SQLITE_OK) {
+		ms_error("Error altering table friends: %s.\n", errmsg);
+		sqlite3_free(errmsg);
 	}
-    sqlite3_finalize(stmt_version);
-	
-	if (database_user_version == 0) {
-		int ret = sqlite3_exec(db,
-			"BEGIN TRANSACTION;\n"
-			"PRAGMA writable_schema = 1;\n"
-			"UPDATE SQLITE_MASTER SET SQL = replace(SQL, 'sip_uri TEXT NOT NULL', 'sip_uri TEXT NULL') WHERE NAME = 'friends';\n"
-			"PRAGMA writable_schema = 0;\n"
-			"PRAGMA user_version = 1;\n"
-			"COMMIT;", 0, 0, &errmsg);
-		if (ret != SQLITE_OK) {
-			ms_error("Error altering table friends: %s.\n", errmsg);
-			sqlite3_free(errmsg);
-			return FALSE;
-		}
-		return TRUE;
-	}
-	return FALSE;
 }
 
 void linphone_core_friends_storage_init(LinphoneCore *lc) {
@@ -1247,12 +1239,7 @@ void linphone_core_friends_storage_init(LinphoneCore *lc) {
 	}
 
 	linphone_create_table(db);
-	if (linphone_update_table(db)) {
-		// After updating schema, database need to be closed/reopenned
-		sqlite3_close(lc->friends_db);
-		_linphone_sqlite3_open(lc->friends_db_file, &db);
-	}
-	
+	linphone_update_table(db);
 	lc->friends_db = db;
 
 	friends_lists = linphone_core_fetch_friends_lists_from_db(lc);
@@ -1332,14 +1319,10 @@ static int create_friend(void *data, int argc, char **argv, char **colName) {
 		lf = linphone_friend_new_from_vcard(vcard);
 	}
 	if (!lf) {
+		LinphoneAddress *addr = linphone_address_new(argv[2]);
 		lf = linphone_friend_new();
-		if (argv[2] != NULL) {
-			LinphoneAddress *addr = linphone_address_new(argv[2]);
-			if (addr) {
-				linphone_friend_set_address(lf, addr);
-				linphone_address_unref(addr);
-			}
-		}
+		linphone_friend_set_address(lf, addr);
+		linphone_address_unref(addr);
 	}
 	linphone_friend_set_inc_subscribe_policy(lf, atoi(argv[3]));
 	linphone_friend_send_subscribe(lf, atoi(argv[4]));

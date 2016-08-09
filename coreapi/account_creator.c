@@ -61,51 +61,51 @@ void linphone_account_creator_cbs_set_user_data(LinphoneAccountCreatorCbs *cbs, 
 	cbs->user_data = ud;
 }
 
-LinphoneAccountCreatorCbsStatusCb linphone_account_creator_cbs_get_is_account_used(const LinphoneAccountCreatorCbs *cbs) {
+LinphoneAccountCreatorDefaultCb linphone_account_creator_cbs_get_is_account_used(const LinphoneAccountCreatorCbs *cbs) {
 	return cbs->is_account_used;
 }
 
-void linphone_account_creator_cbs_set_is_account_used(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorCbsStatusCb cb) {
+void linphone_account_creator_cbs_set_is_account_used(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorDefaultCb cb) {
 	cbs->is_account_used = cb;
 }
 
-LinphoneAccountCreatorCbsStatusCb linphone_account_creator_cbs_get_create_account(const LinphoneAccountCreatorCbs *cbs) {
+LinphoneAccountCreatorDefaultCb linphone_account_creator_cbs_get_create_account(const LinphoneAccountCreatorCbs *cbs) {
 	return cbs->create_account;
 }
 
-void linphone_account_creator_cbs_set_create_account(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorCbsStatusCb cb) {
+void linphone_account_creator_cbs_set_create_account(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorDefaultCb cb) {
 	cbs->create_account = cb;
 }
 
-LinphoneAccountCreatorCbsStatusCb linphone_account_creator_cbs_get_activate_account(const LinphoneAccountCreatorCbs *cbs) {
+LinphoneAccountCreatorDefaultCb linphone_account_creator_cbs_get_activate_account(const LinphoneAccountCreatorCbs *cbs) {
 	return cbs->activate_account;
 }
 
-void linphone_account_creator_cbs_set_activate_account(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorCbsStatusCb cb) {
+void linphone_account_creator_cbs_set_activate_account(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorDefaultCb cb) {
 	cbs->activate_account = cb;
 }
 
-LinphoneAccountCreatorCbsStatusCb linphone_account_creator_cbs_get_link_phone_number_with_account(const LinphoneAccountCreatorCbs *cbs) {
+LinphoneAccountCreatorDefaultCb linphone_account_creator_cbs_get_link_phone_number_with_account(const LinphoneAccountCreatorCbs *cbs) {
 	return cbs->link_phone_number_with_account;
 }
 
-void linphone_account_creator_cbs_set_link_phone_number_with_account(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorCbsStatusCb cb) {
+void linphone_account_creator_cbs_set_link_phone_number_with_account(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorDefaultCb cb) {
 	cbs->link_phone_number_with_account = cb;
 }
 
-LinphoneAccountCreatorCbsStatusCb linphone_account_creator_cbs_get_activate_phone_number_link(const LinphoneAccountCreatorCbs *cbs) {
+LinphoneAccountCreatorDefaultCb linphone_account_creator_cbs_get_activate_phone_number_link(const LinphoneAccountCreatorCbs *cbs) {
 	return cbs->activate_phone_number_link;
 }
 
-void linphone_account_creator_cbs_set_activate_phone_number_link(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorCbsStatusCb cb) {
+void linphone_account_creator_cbs_set_activate_phone_number_link(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorDefaultCb cb) {
 	cbs->activate_phone_number_link = cb;
 }
 
-LinphoneAccountCreatorCbsStatusCb linphone_account_creator_cbs_get_is_account_activated(const LinphoneAccountCreatorCbs *cbs) {
+LinphoneAccountCreatorDefaultCb linphone_account_creator_cbs_get_is_account_activated(const LinphoneAccountCreatorCbs *cbs) {
 	return cbs->is_account_activated;
 }
 
-void linphone_account_creator_cbs_set_is_account_activated(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorCbsStatusCb cb) {
+void linphone_account_creator_cbs_set_is_account_activated(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorDefaultCb cb) {
 	cbs->is_account_activated = cb;
 }
 
@@ -291,7 +291,7 @@ LinphoneAccountCreatorStatus linphone_account_creator_set_phone_number(LinphoneA
 		// if phone is valid, we lastly want to check that length is OK
 		{
 			const LinphoneDialPlan* plan = linphone_dial_plan_by_ccc(country_code);
-			int size = (int)strlen(phone_number);
+			int size = strlen(phone_number);
 			if (size < plan->nnl) {
 				return LinphoneAccountCreatorPhoneNumberTooShort;
 			} else if (size > plan->nnl + 1) {

@@ -409,7 +409,7 @@ GtkWidget *linphone_gtk_get_widget(GtkWidget *window, const char *name){
 	}
 	w=gtk_builder_get_object(builder,name);
 	if (w==NULL){
-		g_error("No widget named %s found in xml interface.",name);
+    g_error("No widget named %s found in xml interface.",name);
 	}
 	if (workaround_gtk_entry_chinese_bug){
 		if (strcmp(G_OBJECT_TYPE_NAME(w),"GtkEntry")==0 || strcmp(G_OBJECT_TYPE_NAME(w),"GtkTextView")==0){
@@ -1510,28 +1510,28 @@ void linphone_gtk_link_to_website(GtkWidget *item){
 static GtkWidget *create_icon_menu(void){
 	GtkWidget *menu=gtk_menu_new();
 	GtkWidget *menu_item;
-	GtkWidget *image;
-	gchar *tmp;
-	const gchar *homesite;
+	//GtkWidget *image;
+	//gchar *tmp;
+	//const gchar *homesite;
 
-	homesite=linphone_gtk_get_ui_config("home","http://www.linphone.org");
-	menu_item=gtk_image_menu_item_new_with_label(_("Website link"));
-	tmp=g_strdup(homesite);
-	g_object_set_data(G_OBJECT(menu_item),"home",tmp);
-	g_object_weak_ref(G_OBJECT(menu_item),(GWeakNotify)g_free,tmp);
+	//homesite=linphone_gtk_get_ui_config("home","http://www.linphone.org");
+	//menu_item=gtk_image_menu_item_new_with_label(_("Website link"));
+	//tmp=g_strdup(homesite);
+	//g_object_set_data(G_OBJECT(menu_item),"home",tmp);
+	//g_object_weak_ref(G_OBJECT(menu_item),(GWeakNotify)g_free,tmp);
 
-	image=gtk_image_new_from_stock(GTK_STOCK_HELP,GTK_ICON_SIZE_MENU);
-	gtk_widget_show(image);
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),image);
+	//image=gtk_image_new_from_stock(GTK_STOCK_HELP,GTK_ICON_SIZE_MENU);
+	//gtk_widget_show(image);
+	//gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),image);
 	//g_object_unref(G_OBJECT(image));
-	gtk_widget_show(menu_item);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
-	g_signal_connect(G_OBJECT(menu_item),"activate",(GCallback)linphone_gtk_link_to_website,NULL);
+	//gtk_widget_show(menu_item);
+	//gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+	//g_signal_connect(G_OBJECT(menu_item),"activate",(GCallback)linphone_gtk_link_to_website,NULL);
 
-	menu_item=gtk_image_menu_item_new_from_stock(GTK_STOCK_ABOUT,NULL);
-	gtk_widget_show(menu_item);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
-	g_signal_connect_swapped(G_OBJECT(menu_item),"activate",(GCallback)linphone_gtk_show_about,NULL);
+	//menu_item=gtk_image_menu_item_new_from_stock(GTK_STOCK_ABOUT,NULL);
+	//gtk_widget_show(menu_item);
+	//gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+	//g_signal_connect_swapped(G_OBJECT(menu_item),"activate",(GCallback)linphone_gtk_show_about,NULL);
 	menu_item=gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT,NULL);
 	gtk_widget_show(menu_item);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
@@ -1719,7 +1719,7 @@ static void linphone_gtk_configure_main_window(void){
 		home=linphone_gtk_get_ui_config("home","http://www.linphone.org");
 		search_icon=linphone_gtk_get_ui_config("directory_search_icon",NULL);
 		update_check_menu=linphone_gtk_get_ui_config_int("update_check_menu",0);
-		show_abcd=linphone_gtk_get_ui_config_int("show_abcd",1);
+		show_abcd=linphone_gtk_get_ui_config_int("show_abcd",0);
 		config_loaded=TRUE;
 	}
 	linphone_gtk_configure_window(w,"main_window");
@@ -1785,10 +1785,6 @@ void linphone_gtk_init_dtmf_table(GtkWidget *mw){
 	GtkWidget *dtmf_table=linphone_gtk_get_widget(mw,"dtmf_table");
 	gtk_widget_set_direction(dtmf_table, GTK_TEXT_DIR_LTR);
 
-	g_object_set_data(G_OBJECT(linphone_gtk_get_widget(mw,"dtmf_A")),"label","A");
-	g_object_set_data(G_OBJECT(linphone_gtk_get_widget(mw,"dtmf_B")),"label","B");
-	g_object_set_data(G_OBJECT(linphone_gtk_get_widget(mw,"dtmf_C")),"label","C");
-	g_object_set_data(G_OBJECT(linphone_gtk_get_widget(mw,"dtmf_D")),"label","D");
 	g_object_set_data(G_OBJECT(linphone_gtk_get_widget(mw,"dtmf_1")),"label","1");
 	g_object_set_data(G_OBJECT(linphone_gtk_get_widget(mw,"dtmf_2")),"label","2");
 	g_object_set_data(G_OBJECT(linphone_gtk_get_widget(mw,"dtmf_3")),"label","3");
@@ -1845,16 +1841,10 @@ static void linphone_gtk_show_keypad(void){
 		gtk_widget_destroy(k);
 	}
 	keypad=linphone_gtk_create_window("keypad", NULL);
+  keypad=linphone_gtk_get_main_window();
 	linphone_gtk_connect_digits(keypad);
 	linphone_gtk_init_dtmf_table(keypad);
 	g_object_set_data(G_OBJECT(mw),"keypad", keypad);
-	if(!GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mw),"show_abcd"))){
-		gtk_widget_hide(linphone_gtk_get_widget(keypad,"dtmf_A"));
-		gtk_widget_hide(linphone_gtk_get_widget(keypad,"dtmf_B"));
-		gtk_widget_hide(linphone_gtk_get_widget(keypad,"dtmf_C"));
-		gtk_widget_hide(linphone_gtk_get_widget(keypad,"dtmf_D"));
-		gtk_table_resize(GTK_TABLE(linphone_gtk_get_widget(keypad,"dtmf_table")),4,3);
-	}
 	gtk_widget_show(keypad);
 }
 

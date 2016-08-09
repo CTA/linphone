@@ -148,13 +148,13 @@ static bool_t put_selection_to_uribar(GtkWidget *treeview){
 	return FALSE;
 }
 
-static void linphone_gtk_call_selected(GtkTreeView *treeview){
+/*static void linphone_gtk_call_selected(GtkTreeView *treeview){
 	put_selection_to_uribar(GTK_WIDGET(treeview));
 	linphone_gtk_start_call(linphone_gtk_get_widget(gtk_widget_get_toplevel(GTK_WIDGET(treeview)),
 					"start_call"));
-}
+}*/
 
-static GtkWidget *linphone_gtk_create_call_log_menu(GtkWidget *call_log){
+/*static GtkWidget *linphone_gtk_create_call_log_menu(GtkWidget *call_log){
 	GtkWidget *menu=NULL;
 	GtkWidget *menu_item;
 	gchar *call_label=NULL;
@@ -192,7 +192,7 @@ static GtkWidget *linphone_gtk_create_call_log_menu(GtkWidget *call_log){
 		gtk_widget_show(image);
 		gtk_widget_show(menu_item);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
-		g_signal_connect_swapped(G_OBJECT(menu_item),"activate",(GCallback)linphone_gtk_call_selected,call_log);
+		//g_signal_connect_swapped(G_OBJECT(menu_item),"activate",(GCallback)linphone_gtk_call_selected,call_log);
 	}
 	if (menu && text_label){
 		menu_item=gtk_image_menu_item_new_with_label(text_label);
@@ -201,7 +201,7 @@ static GtkWidget *linphone_gtk_create_call_log_menu(GtkWidget *call_log){
 		gtk_widget_show(image);
 		gtk_widget_show(menu_item);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
-		g_signal_connect_swapped(G_OBJECT(menu_item),"activate",(GCallback)linphone_gtk_call_log_chat_selected,call_log);
+		//g_signal_connect_swapped(G_OBJECT(menu_item),"activate",(GCallback)linphone_gtk_call_log_chat_selected,call_log);
 	}
 	if (menu && add_contact_label){
 		menu_item=gtk_image_menu_item_new_with_label(add_contact_label);
@@ -210,27 +210,28 @@ static GtkWidget *linphone_gtk_create_call_log_menu(GtkWidget *call_log){
 		gtk_widget_show(image);
 		gtk_widget_show(menu_item);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
-		g_signal_connect_swapped(G_OBJECT(menu_item),"activate",(GCallback)linphone_gtk_call_log_add_contact,call_log);
+		//g_signal_connect_swapped(G_OBJECT(menu_item),"activate",(GCallback)linphone_gtk_call_log_add_contact,call_log);
 	}
 	if (menu) {
-		gtk_widget_show(menu);
-		gtk_menu_attach_to_widget(GTK_MENU(menu),call_log, NULL);
+		//gtk_widget_show(menu);
+		//gtk_menu_attach_to_widget(GTK_MENU(menu),call_log, NULL);
 	}
 
 	if (add_contact_label) g_free(add_contact_label);
 	if (call_label) g_free(call_label);
 	if (text_label) g_free(text_label);
 	return menu;
-}
+}*/
 
 gboolean linphone_gtk_call_log_popup_contact(GtkWidget *list, GdkEventButton *event){
-	GtkWidget *m=linphone_gtk_create_call_log_menu(list);
+	/*GtkWidget *m=linphone_gtk_create_call_log_menu(list);
 	if (m) {
 		gtk_menu_popup (GTK_MENU (m), NULL, NULL, NULL, NULL,
 			event ? event->button : 0, event ? event->time : gtk_get_current_event_time());
 		return TRUE;
 	}
-	return FALSE;
+	return FALSE;*/
+  return FALSE;
 }
 
 gboolean linphone_gtk_call_log_button_pressed(GtkWidget *widget, GdkEventButton *event){
@@ -286,13 +287,13 @@ void linphone_gtk_call_log_update(GtkWidget *w){
 	if(nb > 0)
 		linphone_gtk_call_log_display_missed_call(nb);
 	gtk_tree_store_clear (store);
-
+  
 	for (logs=linphone_core_get_call_logs(linphone_gtk_get_core());logs!=NULL;logs=logs->next){
 		LinphoneCallLog *cl=(LinphoneCallLog*)logs->data;
 		GtkTreeIter iter, iter2;
 		LinphoneAddress *la=linphone_call_log_get_dir(cl)==LinphoneCallIncoming ? linphone_call_log_get_from(cl) : linphone_call_log_get_to(cl);
 		char *addr= linphone_address_as_string(la);
-		const char *display;
+		const char *display = NULL;
 		gchar *logtxt, *headtxt, *minutes, *seconds;
 		gchar quality[20];
 		const char *status=NULL;
@@ -317,8 +318,8 @@ void linphone_gtk_call_log_update(GtkWidget *w){
 		lf=linphone_core_get_friend_by_address(linphone_gtk_get_core(),addr);
 		if(lf != NULL){
 			/*update display name from friend*/
-			display = linphone_friend_get_name(lf);
-			if (display != NULL) linphone_address_set_display_name(la, display);
+			const char *name = linphone_friend_get_name(lf);
+			if (name != NULL) linphone_address_set_display_name(la, name);
 		} else {
 			display=linphone_address_get_display_name(la);
 		}

@@ -382,13 +382,13 @@ LpConfig * lp_config_new_from_buffer(const char *buffer){
 
 	char* ptr = ms_strdup(buffer);
 	char* strtok_storage = NULL;
-	char* line = strtok_r(ptr, "\n", &strtok_storage);
+	char* line = strtok_r(ptr, "\r\n", &strtok_storage);
 
 	conf->refcnt=1;
 
 	while( line != NULL ){
 		current_section = lp_config_parse_line(conf,line,current_section);
-		line = strtok_r(NULL, "\n", &strtok_storage);
+		line = strtok_r(NULL, "\r\n", &strtok_storage);
 	}
 
 	ms_free(ptr);

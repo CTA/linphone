@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 *
 */
 
+#include "lpconfig.h"
 #include "linphone.h"
 
 gboolean linphone_gtk_use_in_call_view(void){
@@ -658,7 +659,7 @@ static gboolean update_audio_meter(volume_ctx_t *ctx){
 		frac=(frac*SMOOTH)+(ctx->last_value*(1-SMOOTH));
 	}
 	ctx->last_value=frac;
-	//g_message("volume_db=%f, frac=%f",volume_db,frac);
+	g_message("volume_db=%f, frac=%f",volume_db,frac);
 	gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(ctx->widget),frac);
 	return TRUE;
 }
@@ -837,6 +838,7 @@ void linphone_gtk_in_call_view_set_paused(LinphoneCall *call){
 void linphone_gtk_in_call_view_update_duration(LinphoneCall *call){
 	GtkWidget *callview=(GtkWidget*)linphone_call_get_user_pointer(call);
 	GtkWidget *duration_label=linphone_gtk_get_widget(callview,"in_call_duration");
+  GtkWidget *main_window=linphone_gtk_get_main_window();
 	int duration=linphone_call_get_duration(call);
 	char tmp[256]={0};
 	int seconds=duration%60;
@@ -844,6 +846,7 @@ void linphone_gtk_in_call_view_update_duration(LinphoneCall *call){
 	int hours=duration/3600;
 	snprintf(tmp,sizeof(tmp)-1,"%02i:%02i:%02i",hours,minutes,seconds);
 	gtk_label_set_text(GTK_LABEL(duration_label),tmp);
+  gtk_window_set_title(GTK_WINDOW(main_window), tmp);
 }
 
 static gboolean in_call_view_terminated(LinphoneCall *call){
@@ -934,7 +937,7 @@ void linphone_gtk_enable_mute_button(GtkButton *button, gboolean sensitive){
 
 void linphone_gtk_draw_hold_button(GtkButton *button, gboolean active){
 	const gchar *icon_name = active ? "linphone-hold-on" : "linphone-hold-off";
-	const gchar *label = active ? _("Resume") : _("Pause");
+	const gchar *label = active ? _("Resume") : _("Hold");
 	GtkWidget *image = gtk_image_new_from_icon_name(icon_name, GTK_ICON_SIZE_BUTTON);
 	g_object_set_data(G_OBJECT(button),"active",GINT_TO_POINTER(active));
 	gtk_button_set_label(GTK_BUTTON(button),label);

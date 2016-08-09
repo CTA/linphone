@@ -1122,11 +1122,11 @@
                 <property name="shadow_type">none</property>
                 <child>
                   <object class="GtkHBox" id="hbox2">
-                    <property name="visible">True</property>
+                    <property name="visible">False</property>
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkComboBox" id="identities">
-                        <property name="visible">True</property>
+                        <property name="visible">False</property>
                         <property name="can_focus">False</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="model">model3</property>
@@ -1144,20 +1144,6 @@
                         <property name="position">0</property>
                       </packing>
                     </child>
-                    <child>
-                      <object class="GtkButton" id="presence_button">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="relief">none</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="padding">5</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
                   </object>
                 </child>
                 <child type="label">
@@ -1167,7 +1153,7 @@
                     <property name="spacing">5</property>
                     <child>
                       <object class="GtkLabel" id="label17">
-                        <property name="visible">True</property>
+                        <property name="visible">False</property>
                         <property name="can_focus">False</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">My current identity:</property>
@@ -1181,7 +1167,7 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="proxy_refresh_button">
-                        <property name="visible">True</property>
+                        <property name="visible">False</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="relief">none</property>
@@ -1215,7 +1201,7 @@
             <property name="can_focus">False</property>
             <child>
               <object class="GtkStatusbar" id="status_bar">
-                <property name="visible">True</property>
+                <property name="visible">False</property>
                 <property name="can_focus">False</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="has_resize_grip">False</property>
@@ -1239,6 +1225,20 @@
                 <property name="position">1</property>
               </packing>
             </child>
+            <child>
+            <object class="GtkButton" id="presence_button">
+              <property name="visible">True</property>
+              <property name="can_focus">True</property>
+              <property name="receives_default">True</property>
+              <property name="relief">none</property>
+            </object>
+            <packing>
+              <property name="expand">False</property>
+              <property name="fill">True</property>
+              <property name="padding">5</property>
+              <property name="position">1</property>
+            </packing>
+          </child>
           </object>
           <packing>
             <property name="expand">False</property>

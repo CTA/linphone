@@ -87,7 +87,7 @@ static void linphone_gtk_set_selection_to_uri_bar(GtkTreeView *treeview){
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 	LinphoneFriend *lf=NULL;
-	gchar* friend;
+	gchar* friend = NULL;
 	select = gtk_tree_view_get_selection (treeview);
 	if (gtk_tree_selection_get_selected (select, &model, &iter)) {
 		LinphoneAddress *addr;
@@ -97,8 +97,8 @@ static void linphone_gtk_set_selection_to_uri_bar(GtkTreeView *treeview){
 			friend=linphone_address_as_string(addr);
 			gtk_entry_set_text(GTK_ENTRY(linphone_gtk_get_widget(linphone_gtk_get_main_window(),"uribar")),friend);
 			linphone_address_unref(addr);
-			ms_free(friend);
 		}
+		ms_free(friend);
 	}
 }
 
